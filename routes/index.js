@@ -1,5 +1,8 @@
 const UserController = require('../controllers/User');
 const PostController = require('../controllers/Post');
+const routeProtection = require('../utils/routeProtection');
+
+const { isValidUser } = routeProtection;
 
 module.exports = (app) => {
   // user routes
@@ -12,5 +15,5 @@ module.exports = (app) => {
 
   // Post routes
 
-  app.post('/post', PostController.create);
+  app.post('/post', isValidUser, PostController.create);
 };
