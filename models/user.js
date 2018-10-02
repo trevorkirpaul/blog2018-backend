@@ -32,12 +32,12 @@ userSchema.pre('save', function (next) {
   });
 });
 
-// add method to decrypt
-
+// add method to model for comparing pw
 userSchema.methods.comparePassword = function (candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) return cb(err);
-
+    if (err) {
+      return cb(err);
+    }
     cb(null, isMatch);
   });
 };
