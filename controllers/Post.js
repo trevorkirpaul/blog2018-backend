@@ -5,7 +5,7 @@ const create = (req, res) => Post.create(req.body.post)
   .catch(err => res.json({ error: err, hasError: true }));
 
 const getAllPosts = (req, res) => Post.find()
-  .populate('author')
+  .populate('author', ['email', 'firstName', 'lastName'])
   .then(posts => res.json({ success: true, posts }))
   .catch(err => res.json({ errpr: err, hasError: true }));
 
