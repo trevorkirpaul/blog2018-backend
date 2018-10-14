@@ -19,5 +19,9 @@ module.exports = (app) => {
 
   app.get('/posts', PostController.getAllPosts);
 
-  app.put('/post', PostController.updatePostById);
+  app.get('/post/:id', PostController.findPostById);
+
+  app.put('/post', isValidUser, PostController.updatePostById);
+
+  app.delete('/post', isValidUser, PostController.deletePostById);
 };

@@ -4,7 +4,7 @@ I'm creating a simple blog as a personal project. This backend will start off as
 
 ## Project Status
 
-- [ ] create models, controllers and routes fo blog functionality
+- [ ] create models, controllers and routes for blog functionality
 - [ ] implement graphQL
 - [ ] implement webpack and modern tooling
 - [ ] refactor codebase to use class syntax
@@ -16,6 +16,7 @@ If you want to run this app locally, you'll need to create a `config.js` file at
 
 ```javascript
 module.exports = {
+  secret: "", // secret used for JWT encoding
   mlab: {
     username: "", // enter the user you created on mLab
     password: "", // enter the pw from the user you created

@@ -8,6 +8,10 @@ const getAllPosts = (req, res) => Post.find()
   .then(posts => res.json({ success: true, posts }))
   .catch(err => res.json({ errpr: err, hasError: true }));
 
+const findPostById = (req, res) => Post.findById(req.params.id)
+  .then(post => res.status(200).send({ success: true, post }))
+  .catch(err => res.status(400).send({ error: err, hasError: true }));
+
 const updatePostById = (req, res) => Post.findByIdAndUpdate(req.body.id, req.body.post, {
   new: true,
 })
@@ -20,8 +24,14 @@ const updatePostById = (req, res) => Post.findByIdAndUpdate(req.body.id, req.bod
     hasError: true,
   }));
 
+const deletePostById = (req, res) => Post.findByIdAndDelete(req.body.id)
+  .then(post => res.status(200).send({ success: true, post }))
+  .catch(err => res.status(400).send({ error: err, hasError: true }));
+
 module.exports = {
   create,
   getAllPosts,
+  findPostById,
   updatePostById,
+  deletePostById,
 };
