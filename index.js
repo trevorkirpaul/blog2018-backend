@@ -8,13 +8,13 @@ const app = express();
 const port = 3001;
 
 const {
-  mlab: { username, password },
+  mlab: { username, password, dbURI },
 } = config;
 
 // connect to db
 
 mongoose.connect(
-  'mongodb://@ds121203.mlab.com:21203/blog2018',
+  dbURI,
   {
     auth: {
       user: username,

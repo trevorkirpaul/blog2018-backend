@@ -1,3 +1,27 @@
 # blog 2018 backend
 
 I'm creating a simple blog as a personal project. This backend will start off as a simple express server with REST endpoints. Eventually I'll create a graphQL endpoint.
+
+## Project Status
+
+- [ ] create models, controllers and routes fo blog functionality
+- [ ] implement graphQL
+- [ ] implement webpack and modern tooling
+- [ ] refactor codebase to use class syntax
+- [ ] convert to typescript
+
+## Instructions
+
+If you want to run this app locally, you'll need to create a `config.js` file at the project root. You will also need to create an mLab database, or another mongo instance of your choice. This app is set up to connect to mlab, other instances might require more setup.
+
+```javascript
+module.exports = {
+  mlab: {
+    username: "", // enter the user you created on mLab
+    password: "", // enter the pw from the user you created
+    dbURI: "" // mLab URI or your mongo instance URI/location
+  }
+};
+```
+
+This project also contains linting rules and it is required that all code follows the linting rules.
