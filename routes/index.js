@@ -16,4 +16,8 @@ module.exports = (app) => {
   // Post routes
 
   app.post('/post', isValidUser, PostController.create);
+
+  app.get('/posts', PostController.getAllPosts);
+
+  app.put('/post', PostController.updatePostById);
 };
