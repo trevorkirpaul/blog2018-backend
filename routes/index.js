@@ -3,7 +3,7 @@ const PostController = require('../controllers/Post');
 const CommentController = require('../controllers/comment');
 const routeProtection = require('../utils/routeProtection');
 
-const { isValidUser } = routeProtection;
+const { isValidUser, isCommentOwner } = routeProtection;
 
 module.exports = (app) => {
   // user routes
@@ -34,7 +34,7 @@ module.exports = (app) => {
 
   app.get('/comments', CommentController.getAllComments);
 
-  app.delete('/comment', CommentController.deleteComment);
+  app.delete('/comment', isCommentOwner, CommentController.deleteComment);
 
   app.put('/comment', CommentController.updateComment);
 };
