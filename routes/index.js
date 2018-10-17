@@ -35,4 +35,6 @@ module.exports = (app) => {
   app.get('/comments', CommentController.getAllComments);
 
   app.delete('/comment', CommentController.deleteComment);
+
+  app.put('/comment', CommentController.updateComment);
 };

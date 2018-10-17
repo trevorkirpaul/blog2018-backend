@@ -21,7 +21,7 @@ const deleteComment = (req, res) => {
     .catch(err => res.status(200).status({ error: err, hasError: true }));
 };
 
-const updateComment = (req, res) => Comment.findByIdAndUpdate(req.params.id, req.body.comment, { new: true })
+const updateComment = (req, res) => Comment.findByIdAndUpdate(req.body.id, req.body.comment, { new: true })
   .then(updatedComment => res.status(200).send({ success: true, comment: updatedComment }))
   .catch(error => res.status(400).send({ error, hasError: true }));
 
