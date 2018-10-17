@@ -33,7 +33,23 @@ const isCommentOwner = (req, res, next) => {
   }
 };
 
+const isPostOwner = (req, res, next) => {
+  try {
+    const userIdFromToken = decodeToken(req.body.token);
+
+    Post.findById(req.body.id).then((post) => {
+      if (post.author.equals(userIdFromToken)) {
+        return next();
+      }
+      return res.status(401).send({ errpr: 'invalid user', hasError: true, auth: false });
+    });
+  } catch (error) {
+    res.status(400).send({ error, hasError: true });
+  }
+};
+
 module.exports = {
   isValidUser,
   isCommentOwner,
+  isPostOwner,
 };
