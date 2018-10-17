@@ -1,5 +1,6 @@
 const UserController = require('../controllers/User');
 const PostController = require('../controllers/Post');
+const CommentController = require('../controllers/comment');
 const routeProtection = require('../utils/routeProtection');
 
 const { isValidUser } = routeProtection;
@@ -24,4 +25,14 @@ module.exports = (app) => {
   app.put('/post', isValidUser, PostController.updatePostById);
 
   app.delete('/post', isValidUser, PostController.deletePostById);
+
+  //  Comment routes
+
+  app.post('/comment', isValidUser, CommentController.create);
+
+  app.get('/comment/:id', CommentController.getCommentById);
+
+  app.get('/comments', CommentController.getAllComments);
+
+  app.delete('/comment', CommentController.deleteComment);
 };
