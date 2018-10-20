@@ -11,6 +11,8 @@ const getAllPosts = (req, res) => Post.find()
   .catch(err => res.json({ errpr: err, hasError: true }));
 
 const findPostById = (req, res) => Post.findById(req.params.id)
+  .populate('author', ['email', 'firstName', 'lastName'])
+  .populate('comments')
   .then(post => res.status(200).send({ success: true, post }))
   .catch(err => res.status(400).send({ error: err, hasError: true }));
 

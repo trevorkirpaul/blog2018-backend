@@ -41,7 +41,7 @@ const isPostOwner = (req, res, next) => {
       if (post.author.equals(userIdFromToken)) {
         return next();
       }
-      return res.status(401).send({ errpr: 'invalid user', hasError: true, auth: false });
+      return res.status(401).send({ error: 'invalid user', hasError: true, auth: false });
     });
   } catch (error) {
     res.status(400).send({ error, hasError: true });

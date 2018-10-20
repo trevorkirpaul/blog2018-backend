@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const graphqlHTTP = require('express-graphql');
+
 const config = require('./config');
 const routes = require('./routes');
+const GraphQLSchema = require('./graphql/Schema');
 
 const app = express();
 
@@ -35,6 +38,16 @@ mongoose.connect(
 app.use(
   express.json({
     type: 'application/json',
+  }),
+);
+
+// graphQL
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: GraphQLSchema,
+    graphiql: true,
   }),
 );
 
