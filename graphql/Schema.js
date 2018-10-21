@@ -79,7 +79,6 @@ const RootMutation = new GraphQLObjectType({
     createPost: {
       type: PostType,
       args: {
-        // token: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
         body: { type: new GraphQLNonNull(GraphQLString) },
         author: { type: new GraphQLNonNull(GraphQLString) },
@@ -105,6 +104,20 @@ const RootMutation = new GraphQLObjectType({
             console.log(res);
             return res;
           })
+          .catch(err => err);
+      },
+    },
+
+    updatePost: {
+      type: PostType,
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        body: { type: new GraphQLNonNull(GraphQLString) },
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parentValue, { title, body, id }) {
+        return Post.findByIdAndUpdate(id, { title, body }, { new: true })
+          .then(res => res)
           .catch(err => err);
       },
     },
