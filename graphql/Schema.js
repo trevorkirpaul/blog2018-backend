@@ -1,14 +1,22 @@
 const axios = require('axios');
 const graphql = require('graphql');
 
+const Post = require('../models/post');
+
 const {
-  GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLList,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLID,
 } = graphql;
 
 const CommentType = new GraphQLObjectType({
   name: 'comment',
   fields: {
-    _id: { type: GraphQLString },
+    id: { type: GraphQLID },
     body: { type: GraphQLString },
     author: { type: GraphQLString },
     parentPost: { type: GraphQLString },
@@ -19,7 +27,7 @@ const CommentType = new GraphQLObjectType({
 const AuthorType = new GraphQLObjectType({
   name: 'author',
   fields: {
-    _id: { type: GraphQLString },
+    id: { type: GraphQLID },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
@@ -30,7 +38,7 @@ const PostType = new GraphQLObjectType({
   name: 'post',
   fields: {
     comments: { type: new GraphQLList(CommentType) },
-    _id: { type: GraphQLString },
+    id: { type: GraphQLID },
     title: { type: GraphQLString },
     body: { type: GraphQLString },
     author: { type: AuthorType },
@@ -64,6 +72,31 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+const RootMutation = new GraphQLObjectType({
+  name: 'RootMutation',
+
+  fields: {
+    createPost: {
+      type: PostType,
+      args: {
+        // token: { type: new GraphQLNonNull(GraphQLString) },
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        body: { type: new GraphQLNonNull(GraphQLString) },
+        author: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parentValue, { title, body, author }) {
+        return Post.create({ title, body, author })
+          .then((res) => {
+            console.log(res);
+            return res;
+          })
+          .catch(err => err);
+      },
+    },
+  },
+});
+
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: RootMutation,
 });
