@@ -93,6 +93,21 @@ const RootMutation = new GraphQLObjectType({
           .catch(err => err);
       },
     },
+
+    deletePost: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parentValue, { id }) {
+        return Post.findByIdAndDelete(id)
+          .then((res) => {
+            console.log(res);
+            return res;
+          })
+          .catch(err => err);
+      },
+    },
   },
 });
 
