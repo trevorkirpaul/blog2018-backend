@@ -29,7 +29,7 @@ mongoose.connect(
   (err) => {
     if (err) return console.log(err);
 
-    return console.log('connected to databse');
+    return console.log('connected to database');
   },
 );
 

@@ -51,6 +51,16 @@ const RootQuery = new GraphQLObjectType({
           .catch(err => err);
       },
     },
+
+    posts: {
+      type: new GraphQLList(PostType),
+      resolve() {
+        return axios
+          .get('http://localhost:3001/posts')
+          .then(response => response.data.posts)
+          .catch(err => err);
+      },
+    },
   },
 });
 
