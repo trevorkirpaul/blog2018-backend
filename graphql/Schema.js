@@ -52,10 +52,11 @@ const RootQuery = new GraphQLObjectType({
     post: {
       type: PostType,
       args: { id: { type: GraphQLString } },
-      resolve(parentValue, args) {
-        return axios
-          .get(`http://localhost:3001/post/${args.id}`)
-          .then(response => response.data.post)
+      resolve(parentValue, { id }) {
+        return Post.findById(id)
+          .populate('author')
+          .populate('comments')
+          .then(res => res)
           .catch(err => err);
       },
     },
@@ -63,9 +64,10 @@ const RootQuery = new GraphQLObjectType({
     posts: {
       type: new GraphQLList(PostType),
       resolve() {
-        return axios
-          .get('http://localhost:3001/posts')
-          .then(response => response.data.posts)
+        return Post.find()
+          .populate('author')
+          .populate('comments')
+          .then(res => res)
           .catch(err => err);
       },
     },
