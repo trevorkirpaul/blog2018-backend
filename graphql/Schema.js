@@ -1,4 +1,3 @@
-const axios = require('axios');
 const graphql = require('graphql');
 
 const Post = require('../models/post');
