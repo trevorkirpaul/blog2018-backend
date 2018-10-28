@@ -34,21 +34,21 @@ mongoose.connect(
 
 const typeDefs = gql`
   type User {
+    id: ID
     firstName: String
     lastName: String
     email: String
-    id: String
   }
 
   type Comment {
+    id: ID
     body: String
     author: User
     parentPost: Post
-    id: String
   }
 
   type Post {
-    id: String
+    id: ID
     title: String
     author: User
     body: String
@@ -57,6 +57,7 @@ const typeDefs = gql`
 
   type Query {
     posts: [Post]
+    post(postId: ID): Post
     comments: [Comment]
   }
 `;
@@ -72,6 +73,15 @@ const resolvers = {
         .then(res => res)
         .catch(err => console.log({ error: err }));
     },
+
+    post(root, args, context, info) {
+      return Post.findById(args.postId)
+        .populate("author")
+        .populate("comments")
+        .then(res => res)
+        .catch(err => console.log({ error: err }));
+    },
+
     comments() {
       return Comment.find()
         .populate("author")
