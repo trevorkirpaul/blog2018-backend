@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const graphqlHTTP = require('express-graphql');
+const cors = require('cors');
 
 const config = require('./config');
 const routes = require('./routes');
@@ -34,6 +35,8 @@ mongoose.connect(
 );
 
 // middleware
+
+app.use(cors());
 
 app.use(
   express.json({
