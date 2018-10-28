@@ -5,11 +5,14 @@ const create = (req, res) => Post.create(req.body.post)
   .catch(err => res.json({ error: err, hasError: true }));
 
 const getAllPosts = (req, res) => Post.find()
-  .populate('author')
+  .populate('author', ['email', 'firstName', 'lastName'])
+  .populate('comments')
   .then(posts => res.json({ success: true, posts }))
   .catch(err => res.json({ errpr: err, hasError: true }));
 
 const findPostById = (req, res) => Post.findById(req.params.id)
+  .populate('author', ['email', 'firstName', 'lastName'])
+  .populate('comments')
   .then(post => res.status(200).send({ success: true, post }))
   .catch(err => res.status(400).send({ error: err, hasError: true }));
 

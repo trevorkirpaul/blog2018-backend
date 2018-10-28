@@ -1,7 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const graphqlHTTP = require('express-graphql');
+const cors = require('cors');
+
 const config = require('./config');
 const routes = require('./routes');
+const GraphQLSchema = require('./graphql/Schema');
 
 const app = express();
 
@@ -26,15 +30,27 @@ mongoose.connect(
   (err) => {
     if (err) return console.log(err);
 
-    return console.log('connected to databse');
+    return console.log('connected to database');
   },
 );
 
 // middleware
 
+app.use(cors());
+
 app.use(
   express.json({
     type: 'application/json',
+  }),
+);
+
+// graphQL
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: GraphQLSchema,
+    graphiql: true,
   }),
 );
 

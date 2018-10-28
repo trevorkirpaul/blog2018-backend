@@ -4,8 +4,9 @@ I'm creating a simple blog as a personal project. This backend will start off as
 
 ## Project Status
 
-- [ ] create models, controllers and routes for blog functionality
-- [ ] implement graphQL
+- [x] create models, controllers and routes for blog functionality
+- [x] implement graphQL
+- [ ] implement all queries and mutations for blog functionality (graphQL)
 - [ ] implement webpack and modern tooling
 - [ ] refactor codebase to use class syntax
 - [ ] convert to typescript
@@ -26,3 +27,28 @@ module.exports = {
 ```
 
 This project also contains linting rules and it is required that all code follows the linting rules.
+
+## GraphQL
+
+### Example graphiql query for a post by ID
+
+```
+query($id:String!) {
+  post(id: $id) {
+    title
+    body
+    author {
+      _id
+      firstName
+      lastName
+      email
+    }
+    comments {
+      _id
+      body
+      author
+      parentPost
+    }
+  }
+}
+```
