@@ -6,7 +6,8 @@ I'm creating a simple blog as a personal project. This backend will start off as
 
 - [x] create models, controllers and routes for blog functionality
 - [x] implement graphQL
-- [ ] implement all queries and mutations for blog functionality (graphQL)
+- [x] implement all queries and mutations for blog functionality (graphQL)
+- [ ] implement Apollo Server & all queries + mutations
 - [ ] implement webpack and modern tooling
 - [ ] refactor codebase to use class syntax
 - [ ] convert to typescript
