@@ -55,10 +55,21 @@ const typeDefs = gql`
     comments: [Comment]
   }
 
+  type Response {
+    success: String
+    error: String
+    hasError: Boolean
+  }
+
   type Query {
     posts: [Post]
     post(postId: ID): Post
     comments: [Comment]
+  }
+
+  type Mutation {
+    createPost(title: String, body: String, author: ID): Response
+    deletePost(postId: ID): Response
   }
 `;
 
@@ -88,6 +99,37 @@ const resolvers = {
         .populate("parentPost")
         .then(res => res)
         .catch(err => console.log({ error: err }));
+    }
+  },
+
+  Mutation: {
+    createPost(root, args, context, info) {
+      const { title, body, author } = args;
+      return Post.create({ title, body, author })
+        .then(() => ({
+          success: "Created Post",
+          error: null,
+          hasError: false
+        }))
+        .catch(() => ({
+          success: "",
+          error: "Failed to create Post",
+          hasError: true
+        }));
+    },
+
+    deletePost(root, args, context, info) {
+      return Post.findByIdAndDelete(args.postId)
+        .then(() => ({
+          success: "Deleted Post",
+          error: null,
+          hasError: false
+        }))
+        .catch(() => ({
+          success: null,
+          error: "Failed to delete Post",
+          hasError: true
+        }));
     }
   }
 };
