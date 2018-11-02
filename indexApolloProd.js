@@ -1,10 +1,14 @@
 const { ApolloServer, gql } = require("apollo-server");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Post = require("./models/post");
 const User = require("./models/user");
 const Comment = require("./models/comment");
 const config = require("./config");
+const tokenHelpers = require("./utils/tokenHelpers");
+
+const { decodeToken, generateToken } = tokenHelpers;
 
 const {
   mlab: { username, password, dbURI }
@@ -61,6 +65,12 @@ const typeDefs = gql`
     hasError: Boolean
   }
 
+  type TokenResponse {
+    message: String
+    hasError: Boolean
+    token: ID
+  }
+
   type Query {
     posts: [Post]
     post(postId: ID): Post
@@ -70,6 +80,13 @@ const typeDefs = gql`
   type Mutation {
     createPost(title: String, body: String, author: ID): Response
     deletePost(postId: ID): Response
+    signIn(email: String, password: String): TokenResponse
+    createUser(
+      firstName: String
+      lastName: String
+      email: String
+      password: String
+    ): User
   }
 `;
 
@@ -130,13 +147,79 @@ const resolvers = {
           error: "Failed to delete Post",
           hasError: true
         }));
+    },
+
+    signIn: async (root, args, context, info) => {
+      /*
+        Search db for user then compare password
+
+        I'm not using the user method, comparing within this fxn
+        since the user method doesn't work in this resolver.
+
+        Could be an async issue, but at least this way works. ^_^
+      */
+
+      try {
+        const user = await User.findOne({ email: args.email });
+
+        if (!user) {
+          return {
+            message: "user not found",
+            token: null,
+            hasError: true
+          };
+        }
+
+        const validPassword = await bcrypt.compare(
+          args.password,
+          user.password
+        );
+
+        console.log({ user, validPassword });
+
+        if (validPassword) {
+          return {
+            message: "Successfully signed in",
+            token: generateToken(user._id),
+            hasError: false
+          };
+        }
+
+        return {
+          message: "failed to sign in",
+          token: null,
+          hasError: true
+        };
+      } catch (error) {
+        console.log({
+          message: "server error",
+          error,
+          hasError: true
+        });
+
+        return {
+          message: "server error, see server console",
+          token: null,
+          hasError: true
+        };
+      }
+    },
+
+    createUser(root, args, context, info) {
+      const { firstName, lastName, email, password } = args;
+      return User.create({ firstName, lastName, email, password })
+        .then(user => user)
+        .catch(() => "failed to create user");
     }
   }
 };
 
 // create then run server
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+});
 
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`);

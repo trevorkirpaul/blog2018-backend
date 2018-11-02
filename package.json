@@ -6,6 +6,7 @@
   "dependencies": {
     "apollo-server": "^2.1.0",
     "axios": "^0.18.0",
+    "bcrypt": "^3.0.2",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
@@ -17,9 +18,7 @@
     "nodemon": "^1.18.4"
   },
   "scripts": {
-    "start": "nodemon index.js",
-    "graphql": "nodemon indexApollo.js",
-    "graphql-prod": "nodemon indexApolloProd.js"
+    "start": "nodemon indexApolloProd.js"
   },
   "devDependencies": {
     "eslint-config-airbnb-base": "^13.1.0",

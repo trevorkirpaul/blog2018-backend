@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt-nodejs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt-nodejs");
 
 const { Schema } = mongoose;
 
@@ -8,16 +8,16 @@ const userSchema = new Schema({
   lastName: String,
   email: {
     type: String,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 });
 
 // pw encrpt on save hook
-userSchema.pre('save', function (next) {
+userSchema.pre("save", function(next) {
   const user = this;
 
   bcrypt.genSalt(10, (err, salt) => {
@@ -33,7 +33,11 @@ userSchema.pre('save', function (next) {
 });
 
 // add method to model for comparing pw
-userSchema.methods.comparePassword = function (candidatePassword, cb) {
+// not used with graphQL resolvers
+// using bcrypt.compare inside reolvers
+// bcrypt, not bcrypt-js
+
+userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) {
       return cb(err);
@@ -42,6 +46,16 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
   });
 };
 
-const Model = mongoose.model('user', userSchema);
+userSchema.methods.authenticatePassword = function(candidatePassword) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) {
+      return false;
+    }
+
+    return true;
+  });
+};
+
+const Model = mongoose.model("user", userSchema);
 
 module.exports = Model;
