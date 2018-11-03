@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt-nodejs");
+const bcrypt = require("bcryptjs");
 
 const { Schema } = mongoose;
 
@@ -37,24 +37,29 @@ userSchema.pre("save", function(next) {
 // using bcrypt.compare inside reolvers
 // bcrypt, not bcrypt-js
 
-userSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      return cb(err);
-    }
-    cb(null, isMatch);
-  });
-};
+// ! had to remove bcrypt, had issues installing due to lib error
+// ! now using bcryptjs but will use compare in resolver
 
-userSchema.methods.authenticatePassword = function(candidatePassword) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      return false;
-    }
+//! therefore, won't need these methods for graphQL
 
-    return true;
-  });
-};
+// userSchema.methods.comparePassword = function(candidatePassword, cb) {
+//   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+//     if (err) {
+//       return cb(err);
+//     }
+//     cb(null, isMatch);
+//   });
+// };
+
+// userSchema.methods.authenticatePassword = function(candidatePassword) {
+//   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+//     if (err) {
+//       return false;
+//     }
+
+//     return true;
+//   });
+// };
 
 const Model = mongoose.model("user", userSchema);
 

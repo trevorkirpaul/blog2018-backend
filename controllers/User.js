@@ -1,5 +1,5 @@
-const User = require('../models/user');
-const tokenHelpers = require('../utils/tokenHelpers');
+const User = require("../models/user");
+const tokenHelpers = require("../utils/tokenHelpers");
 
 const { generateToken, decodeToken } = tokenHelpers;
 
@@ -15,7 +15,7 @@ const signIn = (req, res) => {
   const credentials = req.body;
 
   User.findOne({ email: credentials.email })
-    .then((user) => {
+    .then(user => {
       user.comparePassword(credentials.password, (err, auth) => {
         if (auth) {
           const token = generateToken(user._id);
@@ -41,5 +41,5 @@ const authenticateToken = (req, res) => {
 module.exports = {
   create,
   signIn,
-  authenticateToken,
+  authenticateToken
 };

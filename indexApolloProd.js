@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const Post = require("./models/post");
 const User = require("./models/user");
@@ -78,7 +78,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createPost(title: String, body: String, author: ID): Response
+    createPost(title: String, body: String, token: ID): Response
     deletePost(postId: ID): Response
     signIn(email: String, password: String): TokenResponse
     createUser(
@@ -120,19 +120,40 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost(root, args, context, info) {
-      const { title, body, author } = args;
-      return Post.create({ title, body, author })
-        .then(() => ({
-          success: "Created Post",
+    createPost: async (root, args, context, info) => {
+      const { title, body, token } = args;
+
+      try {
+        // get userID from token then validate user
+
+        const authorID = decodeToken(args.token);
+
+        const user = User.findById(authorID);
+
+        if (!user) {
+          return {
+            success: null,
+            error: "invalid user token",
+            hasError: true
+          };
+        }
+
+        // create post
+
+        const newPost = await Post.create({ title, body, author: authorID });
+
+        return {
+          success: "Created post",
           error: null,
           hasError: false
-        }))
-        .catch(() => ({
-          success: "",
-          error: "Failed to create Post",
+        };
+      } catch (error) {
+        return {
+          success: null,
+          error: "Failed to create post",
           hasError: true
-        }));
+        };
+      }
     },
 
     deletePost(root, args, context, info) {
@@ -175,7 +196,7 @@ const resolvers = {
           user.password
         );
 
-        console.log({ user, validPassword });
+        // console.log({ user, validPassword });
 
         if (validPassword) {
           return {
